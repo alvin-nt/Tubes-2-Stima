@@ -1,22 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace WebCrawler
+namespace CSWebTest
 {
     static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        /// Kode untuk inisialisasi console
         /// </summary>
-        [STAThread]
-        static void Main()
+        /// <returns></returns>
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
+        static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            AllocConsole();
+
+            Crawler.CrawlSite();
+
+            Console.ReadLine();
         }
+
     }
 }

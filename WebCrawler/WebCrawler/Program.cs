@@ -5,26 +5,26 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace CSWebTest
+namespace WebCrawler
 {
-    static class Program
-    {
-        /// <summary>
-        /// Kode untuk inisialisasi console
-        /// </summary>
-        /// <returns></returns>
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
+	static class Program
+	{
+		/// <summary>
+		/// Kode untuk inisialisasi console
+		/// </summary>
+		/// <returns></returns>
+		[DllImport("kernel32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		static extern bool AllocConsole();
 
-        static void Main(string[] args)
-        {
-            AllocConsole();
+		static void Main(string[] args)
+		{
+			AllocConsole();
+			
+			Crawler.CrawlSite();
 
-            Crawler.CrawlSite();
+			Console.ReadLine();
+		}
 
-            Console.ReadLine();
-        }
-
-    }
+	}
 }

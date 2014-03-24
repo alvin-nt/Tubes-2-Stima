@@ -1,0 +1,11 @@
+# komentar lagi cuy
+# hanya tulis TLD TANPA titik
+# valid: com
+# tidak valid: .net
+
+com
+net
+org
+or.id
+ac.id
+edu

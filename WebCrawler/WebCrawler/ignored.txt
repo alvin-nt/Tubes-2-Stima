@@ -1,0 +1,9 @@
+# Ini adalah komentar
+# NOTE: Satu kata untuk satu baris!
+
+or
+and
+the
+yang
+dari
+

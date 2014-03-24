@@ -4,20 +4,20 @@
    (contoh: PowerTools, NuGet Package Manager)
    dan bisa langsung connect ke Git (yang Express juga bisa, tapi lebih baik pake yang Pro)
 2. References kemungkinan perlu di-link ulang ke Interop.SHDocVw.dll yang sudah disertakan (buat report generator),
-   serta System.Configuration (kita bakal pake ConfigurationManager buat menangani konfigurasi aplikasi)
+   serta System.Configuration (kita bakal pake ConfigurationManager (App.Config) buat menangani konfigurasi aplikasi)
 3. Sistem akan didukung dengan SQLite, jadi tolong dipelajari ya~
 4. Ketika nanti kita buat programnya, banyak kode akan dirombak, jadi bakal banyak berubah dari versi aslinya (versi internet)
-   NOTE: 90% kode diambil dari internet, tapi masih buggy
+   NOTE: kode sudah sebagian besar dirombak
 
-Rencana layout tabel program:
---- ID --- URL --- KeyWord1 --- KeyWord2 --- ... --- KeyWordN ---
---- (int) --- (string) --- (boolean) --- (boolean) --- ... --- (boolean) ---
+Rencana skema tabel program:
+--- ID --- URL --- Title --- KeyWord1 --- KeyWord2 --- ... --- KeyWordN ---
+--- (int) --- (string) --- (string) --- (boolean) --- (boolean) --- ... --- (boolean) ---
 
 TODO (global):
-- ubah regex jadi pake HtmlAgilityPack (Alvin)
 - modul Query >> (Josh & Dariel) (pake SQL?)
 - bikin GUI untuk Explorer & Crawler, termasuk untuk pengaturan konfigurasinya
+- Lengkapi textfile ignored.txt (nanti di-rename), ignored_pages.txt, dan domains.txt
 - Kaitkan program dengan SQLite >> List?
 - algoritma BFS (Dariel)
-- cek: apakah bisa pake HtmlAgilityPack buat menangani class Page?
 - (bonus round) >> pake multithread untuk pemrosesan, biar lebih cepat
+- (bonus round) >> cari cara penanganan PHP redirect, biar ngga usah nge-parse webpage yang berupa login, signup, etc.

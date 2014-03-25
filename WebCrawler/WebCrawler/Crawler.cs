@@ -132,10 +132,15 @@ namespace WebCrawler
 			}
 		}
 
+		/// <summary>
+		/// Mengembalikan return value berupa dokumen
+		/// </summary>
+		/// <param name="doc">Dokumen HTML yang sudah di-instansiasi</param>
+		/// <param name="URL">URL tujuan</param>
+		/// <returns>dokumen HTML yang sudah di-load</returns>
 		private static HtmlDocument GetDocument(HtmlDocument doc, Uri URL)
 		{
 			HttpWebRequest oReq = (HttpWebRequest)WebRequest.Create(URL);
-			
 			oReq.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5";
 
 			HttpWebResponse resp = (HttpWebResponse)oReq.GetResponse();
@@ -149,7 +154,7 @@ namespace WebCrawler
 				}
 				catch (WebException ex)
 				{
-					throw ex;
+					throw ;
 				}
 			}
 
@@ -215,20 +220,6 @@ namespace WebCrawler
 			Uri retval = new Uri(sourceUri, relativeLink);
 
 			return retval.ToString();
-		}
-
-		/// <summary>
-		/// Mengubah string menjadi satu level di atasnya
-		/// </summary>
-		/// <param name="absoluteUri">String yang mau di-tendang satu level</param>
-		private static void UpOneLevel(string absoluteUri)
-		{
-			int i = absoluteUri.LastIndexOf('/')-1;
-
-			while (absoluteUri[i] != '/')
-				i--;
-
-			absoluteUri.Substring(0, i);
 		}
 
 		#region Logging and Reporting

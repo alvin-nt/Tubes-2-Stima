@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace WebCrawler
 {
-	static class FileOperators
+	public abstract class FileOperators
 	{
 		/// <summary>
 		/// Melakukan pengisian kata-kata ke dalam List of String
@@ -14,8 +14,6 @@ namespace WebCrawler
 		/// <param name="list">List of String</param>
 		public static void LoadToListOfString(string filename, List<string> list)
 		{
-			string className = MethodBase.GetCurrentMethod().DeclaringType.Name;
-
 			try
 			{
 				StreamReader file = new StreamReader(filename);
@@ -31,17 +29,17 @@ namespace WebCrawler
 					}
 				}
 				
-				Console.WriteLine(className + ": read " + counter + " lines");
+				Console.WriteLine(filename + ": read " + counter + " lines");
 
 				file.Close();
 			}
-			catch (IOException ex) // filenya ngga ada
+			catch (IOException ) // filenya ngga ada
 			{
-				throw ex;
+				throw ;
 			}
-			catch (Exception ex) // error lain
+			catch (Exception ) // error lain
 			{
-				throw ex;
+				throw ;
 			}
 		}
 	}

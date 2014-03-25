@@ -19,9 +19,11 @@ namespace WebCrawler
 			}
 		} 
 		#endregion
+		#region Constants
 		private const string _REGEX_PASS1 = @"<[^>]+>|&nbsp;";
 		private const string _REGEX_PASS2 = @"\s{2,}";
-
+		
+		#endregion
 		#region Private Instance Fields
 		private List<string> _keywords = new List<string>();
 		private static List<string> _ignore = new List<string>();
@@ -58,15 +60,15 @@ namespace WebCrawler
 		{
 			var root = doc.DocumentNode;
 
-			ExtractTextFromTag("p", root);
-			ExtractTextFromTag("a", root);
-			ExtractTextFromTag("title", root);
-			ExtractTextFromTag("h1", root);
-			ExtractTextFromTag("h2", root);
-			ExtractTextFromTag("h3", root);
-			ExtractTextFromTag("h4", root);
-			ExtractTextFromTag("h5", root);
-			ExtractTextFromTag("h6", root);
+			ExtractKeywordsFromTag("p", root);
+			ExtractKeywordsFromTag("a", root);
+			ExtractKeywordsFromTag("title", root);
+			ExtractKeywordsFromTag("h1", root);
+			ExtractKeywordsFromTag("h2", root);
+			ExtractKeywordsFromTag("h3", root);
+			ExtractKeywordsFromTag("h4", root);
+			ExtractKeywordsFromTag("h5", root);
+			ExtractKeywordsFromTag("h6", root);
 		}
 		
 		/// <summary>
@@ -74,8 +76,9 @@ namespace WebCrawler
 		/// </summary>
 		/// <param name="tag"></param>
 		/// <param name="root"></param>
-		private void ExtractTextFromTag(string tag, HtmlNode root)
+		private void ExtractKeywordsFromTag(string tag, HtmlNode root)
 		{
+			// tag sedikit diubah
 			tag = "//" + tag;
 
 			if (root.HasChildNodes)
@@ -94,6 +97,7 @@ namespace WebCrawler
 							if (buffer.Count > 0)
 							{
 								buffer = buffer.Where(x => !String.IsNullOrWhiteSpace(x) && x.Length >= 3).ToList();
+
 								Crawler.MergeList(_keywords, buffer);
 							}
 						}
@@ -106,6 +110,14 @@ namespace WebCrawler
 			}
 		}
 
+		/// <summary>
+		/// Melakukan normalisasi terhadap HTML Text:
+		/// 1. Pembersihan terhadap tag/simbol yang tersisa
+		/// 2. Pengubahan semua karakter menjadi small caps
+		/// 3. Pengubahan special characters menjadi whitespace
+		/// </summary>
+		/// <param name="node">Node HTML yang dimaksud</param>
+		/// <returns>string yang berisi teks HTML yang sudah 'normal'</returns>
 		private string NormalizeHTML(HtmlNode node)
 		{
 			StringBuilder sb = new StringBuilder();
@@ -122,12 +134,11 @@ namespace WebCrawler
 				if ((c >= '0' && c <= '9') || 
 					(c >= 'A' && c <= 'Z') || 
 					(c >= 'a' && c <= 'z'))
-					
 				{
 					sb.Append(Char.ToLower(c));
 				}
-				else if ((c == '.' || c == '_' || c == '\'' || c == ' ' || c == '-' || c == '/' || c == ':') && 
-					 (i != 0 && i != temp.Length-1))
+				else if ((c == '.' || c == '_' || c == ' ' || c == '-' || c == '/' || c == ':') && 
+						(i != 0 && i != temp.Length-1))
 				{
 					sb.Append(' ');
 				}

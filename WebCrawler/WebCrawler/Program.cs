@@ -13,13 +13,18 @@ namespace WebCrawler
 		/// Kode untuk inisialisasi console
 		/// </summary>
 		/// <returns></returns>
-		[DllImport("kernel32.dll", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		static extern bool AllocConsole();
-
-		static void Main(string[] args)
+		
+		public class NativeMethods 
 		{
-			AllocConsole();
+			[DllImport("kernel32.dll", SetLastError = true)]
+			[return: MarshalAs(UnmanagedType.Bool)]
+			public static extern bool AllocConsole();
+		}
+		
+		[STAThread]
+		public static void Main(string[] args)
+		{
+			NativeMethods.AllocConsole();
 			
 			Crawler.CrawlSite();
 

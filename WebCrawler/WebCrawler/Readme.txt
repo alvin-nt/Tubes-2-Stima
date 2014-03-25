@@ -13,8 +13,6 @@ Rencana skema tabel program:
 --- URL --- Title --- KeyWord1 --- KeyWord2 --- ... --- KeyWordN ---
 --- (string) --- (string) --- (boolean) --- (boolean) --- ... --- (boolean) ---
 
-asdf
-
 TODO (global):
 - modul Query >> (Josh & Dariel) (pake SQL?)
 - bikin GUI untuk Explorer & Crawler, termasuk untuk pengaturan konfigurasinya

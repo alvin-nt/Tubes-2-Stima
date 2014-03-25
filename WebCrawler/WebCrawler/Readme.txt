@@ -10,8 +10,10 @@
    NOTE: kode sudah sebagian besar dirombak
 
 Rencana skema tabel program:
---- ID --- URL --- Title --- KeyWord1 --- KeyWord2 --- ... --- KeyWordN ---
---- (int) --- (string) --- (string) --- (boolean) --- (boolean) --- ... --- (boolean) ---
+--- URL --- Title --- KeyWord1 --- KeyWord2 --- ... --- KeyWordN ---
+--- (string) --- (string) --- (boolean) --- (boolean) --- ... --- (boolean) ---
+
+asdf
 
 TODO (global):
 - modul Query >> (Josh & Dariel) (pake SQL?)

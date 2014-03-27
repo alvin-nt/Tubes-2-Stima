@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -40,7 +46,11 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>C:\Users\Alvin Natawiguna\Documents\Visual Studio 2013\Projects\CSWebTest\CSWebTest\obj\Debug\Interop.SHDocVw.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\packages\MySql.Data.6.8.3\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Crawler.cs" />
     <Compile Include="CSSClassParser.cs" />
+    <Compile Include="DBConnection.cs" />
     <Compile Include="FileOperators.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
@@ -103,6 +114,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Readme.txt" />
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

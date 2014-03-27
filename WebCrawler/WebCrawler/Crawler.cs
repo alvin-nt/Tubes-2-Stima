@@ -152,7 +152,7 @@ namespace WebCrawler
 					var resultStream = resp.GetResponseStream();
 					doc.Load(resultStream);
 				}
-				catch (WebException ex)
+				catch (WebException )
 				{
 					throw ;
 				}

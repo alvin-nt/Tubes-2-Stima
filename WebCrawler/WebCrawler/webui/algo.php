@@ -11,12 +11,10 @@
 	    <p>"Because binoculars for search icons are too mainstream"</p>
 	    <br />
 	    <p>
-		<b>This is a random Page Describing the Algorithm</b><br/><br/>
-		BLABLALBalbalsglajgnahvrotur snhvsu ludshnfvgskdhf gsui <br/>
-		sadlvnhas oghnnhg porhnsdvf hgldjfgh skf hglsdfvjnsdf<br/>
-		na slghn ldjfh pgoch fgsdfh ;ld nvdcnvk ldjvnlkjnvlk<br/>
-		langsdfnhgpso dfhpvnsfnh ldjfsh nvdsjnfvldhf<br/>
-		asmjdgisdnhf dshfngnvsd ;vnihvakljhnvlkd jfbvldnj<br/>
+		<b>The Algorithm behind this Search Engine</b><br/><br/>
+		This search engine uses 2 algorithms: Breadth First Search and Depth First Search.<br/><br/>
+		Breadth first search "The Obsessive-Compulsive" visits all URL in a page and then goes deeper.<br/><br/>
+		Depth first search "The Die-Hard Adventurer" visits a URL in a page, then visits the next first URL in the visited page, and so on.<br/>
 	    </p>
 	</div>
 	<div class = "linkscontainer">

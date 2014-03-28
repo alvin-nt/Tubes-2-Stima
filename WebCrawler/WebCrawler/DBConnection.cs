@@ -23,7 +23,7 @@ namespace WebCrawler
 		private string database;
 		private string uid;
 		private string password;
-		private string table;
+		//private string table; // seems unused.
 		
 		private List<string> _exceptions = new List<string>();
 		#endregion

@@ -17,7 +17,7 @@
 	    </form>
 	</div>
 	<div class = "linkscontainer">
-	    <div class = "links"><a href="crawl.php">Crawling and Indexing</a></div>
+	    <div class = "links"><a href="crawl.php">Indexing</a></div>
 	    <div class = "links"><a href="algo.php">Algorithm</a></div>
 	    <div class = "links"><a href="about.php">About</a></div>
 	</div>

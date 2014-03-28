@@ -1,0 +1,124 @@
+body {
+    background: #eee;
+    padding: 0px;
+    margin: 0px;
+    font-family: Segoe UI, sans-serif;
+}
+div.maincontainer {
+    background: #ddd;
+    padding: 15px;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    min-height: 430px;
+    text-align: center;
+    box-shadow: 1px 1px 10px #555;
+}
+h1,h2,h3,h4 {
+    text-decoration: none;
+    font-weight: normal;
+    color: #777;
+    text-shadow: 1px 1px #fff;
+    margin-bottom: 0px;
+}
+h2 {
+    margin: 0px;
+}
+h3 {
+    line-height: 10px;
+    display:box;
+}
+h4 {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+p {
+    margin: 3px;
+}
+
+div.links {
+    width: 200px;
+    float: left;
+    display: box;
+    line-height: 20px;
+    margin: auto;
+}
+div.link {
+    width: 200px;
+    display: box;
+    line-height: 20px;
+    margin: auto;
+}
+
+div.linkscontainer {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    background: #cc;
+    text-align: center;
+    top: 20px;
+    position: relative;
+}
+
+div.results {
+    border: 1px solid #bbb;
+    margin: 10px 0px 0px 0px;
+    padding: 10px;
+    text-align: left;
+}
+
+a {
+    color: #45f;
+    text-decoration: none;
+    -webkit-transition: color,font-size 250ms;
+    -moz-transition: color,font-size 250ms;
+    -ms-transition: color,font-size 250ms;
+    -o-transition: color,font-sizeall 250ms;
+    transition: color,font-size 250ms;
+    text-shadow: 1px 1px #fff;
+}
+
+a.nofx:hover {
+    color: #88f;
+    text-decoration: none;
+    font-size: 100%;
+}
+
+a:hover {
+    color: #88f;
+    text-decoration: none;
+    font-size: 120%;
+}
+
+#query {
+    /*font-size: 18px;*/
+    height: 40px;
+    padding: 0px;
+    margin:0px;
+    border-radius: 10px;
+    border-width: 0px;
+    width: 300px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#submit {
+    height: 40px;
+    padding: 0px;
+    margin:0px;
+    border-radius: 10px;
+    border-width: 0px;
+    width: 80px;
+    -webkit-transition: all 250ms;
+    -moz-transition: all 250ms;
+    -ms-transition: all 250ms;
+    -o-transition: all 250ms;
+    transition: all 250ms;
+    cursor: pointer;
+}
+
+#submit:hover {
+    background: #99f;
+}

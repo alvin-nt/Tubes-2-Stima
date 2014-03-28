@@ -46,7 +46,7 @@
 			this.label3 = new System.Windows.Forms.Label();
 			this.currentCrawlText = new System.Windows.Forms.Label();
 			this.htmlOutput = new System.Windows.Forms.CheckBox();
-			this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+			this.logFile = new System.Windows.Forms.SaveFileDialog();
 			this.label8 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.depthLimit = new System.Windows.Forms.NumericUpDown();
@@ -61,6 +61,8 @@
 			this.label12 = new System.Windows.Forms.Label();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
+			this.abortCrawl = new System.Windows.Forms.Button();
+			this.urlUpdater = new System.ComponentModel.BackgroundWorker();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.depthLimit)).BeginInit();
@@ -72,7 +74,7 @@
 			// 
 			this.doCrawl.Location = new System.Drawing.Point(516, 41);
 			this.doCrawl.Name = "doCrawl";
-			this.doCrawl.Size = new System.Drawing.Size(80, 64);
+			this.doCrawl.Size = new System.Drawing.Size(80, 29);
 			this.doCrawl.TabIndex = 0;
 			this.doCrawl.Text = "Begin Crawl";
 			this.doCrawl.UseVisualStyleBackColor = true;
@@ -93,27 +95,28 @@
 			this.urlToCrawl.Name = "urlToCrawl";
 			this.urlToCrawl.Size = new System.Drawing.Size(519, 20);
 			this.urlToCrawl.TabIndex = 2;
+			this.urlToCrawl.Text = "http://informatika.stei.itb.ac.id/~rinaldi.munir/";
 			// 
 			// dfs
 			// 
 			this.dfs.AutoSize = true;
 			this.dfs.Location = new System.Drawing.Point(6, 42);
 			this.dfs.Name = "dfs";
-			this.dfs.Size = new System.Drawing.Size(113, 17);
+			this.dfs.Size = new System.Drawing.Size(76, 17);
 			this.dfs.TabIndex = 4;
-			this.dfs.TabStop = true;
-			this.dfs.Text = "Depth First Search";
+			this.dfs.Text = "Depth First";
 			this.dfs.UseVisualStyleBackColor = true;
 			// 
 			// bfs
 			// 
 			this.bfs.AutoSize = true;
+			this.bfs.Checked = true;
 			this.bfs.Location = new System.Drawing.Point(6, 19);
 			this.bfs.Name = "bfs";
-			this.bfs.Size = new System.Drawing.Size(121, 17);
+			this.bfs.Size = new System.Drawing.Size(84, 17);
 			this.bfs.TabIndex = 3;
 			this.bfs.TabStop = true;
-			this.bfs.Text = "Breadth First Search";
+			this.bfs.Text = "Breadth First";
 			this.bfs.UseVisualStyleBackColor = true;
 			// 
 			// crawler
@@ -125,7 +128,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(144, 21);
+			this.label2.Location = new System.Drawing.Point(128, 21);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(63, 13);
 			this.label2.TabIndex = 5;
@@ -207,9 +210,9 @@
 			this.label5.AutoSize = true;
 			this.label5.Location = new System.Drawing.Point(7, 51);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(99, 13);
+			this.label5.Size = new System.Drawing.Size(105, 13);
 			this.label5.TabIndex = 10;
-			this.label5.Text = "Bytes Downloaded:";
+			this.label5.Text = "kBytes Downloaded:";
 			// 
 			// label3
 			// 
@@ -233,12 +236,21 @@
 			// 
 			this.htmlOutput.AutoCheck = false;
 			this.htmlOutput.AutoSize = true;
-			this.htmlOutput.Location = new System.Drawing.Point(147, 43);
+			this.htmlOutput.Location = new System.Drawing.Point(131, 43);
 			this.htmlOutput.Name = "htmlOutput";
 			this.htmlOutput.Size = new System.Drawing.Size(105, 17);
 			this.htmlOutput.TabIndex = 9;
 			this.htmlOutput.Text = "Output as HTML";
 			this.htmlOutput.UseVisualStyleBackColor = true;
+			// 
+			// logFile
+			// 
+			this.logFile.DefaultExt = "html";
+			this.logFile.FileName = "HSTlog.html";
+			this.logFile.Filter = "HTML File|*.html";
+			this.logFile.InitialDirectory = "C:\\";
+			this.logFile.Title = "Save Log as...";
+			this.logFile.FileOk += new System.ComponentModel.CancelEventHandler(this.logFile_FileOK);
 			// 
 			// label8
 			// 
@@ -270,10 +282,20 @@
 			// 
 			// depthLimit
 			// 
-			this.depthLimit.Location = new System.Drawing.Point(209, 19);
+			this.depthLimit.Location = new System.Drawing.Point(197, 19);
+			this.depthLimit.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
 			this.depthLimit.Name = "depthLimit";
-			this.depthLimit.Size = new System.Drawing.Size(43, 20);
+			this.depthLimit.Size = new System.Drawing.Size(55, 20);
 			this.depthLimit.TabIndex = 12;
+			this.depthLimit.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
 			// 
 			// inDbServer
 			// 
@@ -375,11 +397,27 @@
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "Currently Crawling";
 			// 
+			// abortCrawl
+			// 
+			this.abortCrawl.Location = new System.Drawing.Point(516, 77);
+			this.abortCrawl.Name = "abortCrawl";
+			this.abortCrawl.Size = new System.Drawing.Size(80, 29);
+			this.abortCrawl.TabIndex = 15;
+			this.abortCrawl.Text = "Abort Crawl";
+			this.abortCrawl.UseVisualStyleBackColor = true;
+			this.abortCrawl.Click += new System.EventHandler(this.abortCrawl_Click);
+			// 
+			// urlUpdater
+			// 
+			this.urlUpdater.DoWork += new System.ComponentModel.DoWorkEventHandler(this.urlUpdaterStart);
+			this.urlUpdater.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.urlUpdaterModify);
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(608, 257);
+			this.Controls.Add(this.abortCrawl);
 			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox2);
@@ -423,7 +461,7 @@
 		private System.Windows.Forms.Label BytesDownloaded;
 		private System.Windows.Forms.Label pagesCrawled;
 		private System.Windows.Forms.CheckBox htmlOutput;
-		private System.Windows.Forms.SaveFileDialog saveFileDialog;
+		private System.Windows.Forms.SaveFileDialog logFile;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.TextBox inDbName;
@@ -438,6 +476,8 @@
 		private System.Windows.Forms.TextBox inDbTable;
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.GroupBox groupBox4;
+		private System.Windows.Forms.Button abortCrawl;
+		private System.ComponentModel.BackgroundWorker urlUpdater;
     }
 }
 

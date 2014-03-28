@@ -44,7 +44,7 @@ namespace WebCrawler
 
 			string configUrl = ConfigurationManager.AppSettings["url"];
 			Uri rootUrl = new Uri(configUrl);
-			CrawlPage(rootUrl, 10);
+			CrawlPage(rootUrl, Convert.ToInt16(ConfigurationManager.AppSettings["crawlDepth"]));
 
 			StringBuilder sb = CreateReport();
 
@@ -59,80 +59,94 @@ namespace WebCrawler
 		/// Melakukan crawling dari sebuah page -- metode DFS
 		/// </summary>
 		/// <param name="URL">URL yang mau di-crawl</param>
-		/// <param name="depth">kedalaman maksimum, defaultnya 10</param>
-		public static void CrawlPage(Uri URL, int depth = 10)
+		/// <param name="depth">max depth</param>
+		public static void CrawlPage(Uri URL, int depth)
 		{
-			if (!PageHasBeenCrawled(URL) && depth > 0)
-			{
-				HtmlDocument doc = new HtmlDocument();
+			if (ConfigurationManager.AppSettings["abort"] == "no")
+			{ 
+				Console.WriteLine("Depth is " + depth);
+				ConfigurationManager.AppSettings["totalCrawled"] = Convert.ToString(_pages.Count);
+				ConfigurationManager.AppSettings["ignoredURL"] = Convert.ToString(_ignoredPages.Count);
+				ConfigurationManager.AppSettings["externalURL"] = Convert.ToString(_externalUrls.Count);
+				int totalsize = 0;
+				foreach (Page page in _pages) {
+					totalsize += page.Size;
+				}
+				ConfigurationManager.AppSettings["bytesCrawled"] = Convert.ToString(totalsize/1000);
 
-				// output sementara
-				Console.WriteLine("Crawling " + URL);
-
-				try
+				if (!PageHasBeenCrawled(URL) && depth > 0)
 				{
-					doc = GetDocument(doc, URL);
+					HtmlDocument doc = new HtmlDocument();
 
-					// assign dia punya page value
-					Page page = new Page();
-					page.URL = URL;
-					page.Text = doc.DocumentNode.OuterHtml;
-					
-					page.CalculateViewStateSize();
-					
-					// lakukan parsing
-					LinkParser lParser = new LinkParser();
-					lParser.ParseLinks(doc, URL);
+					// output sementara
+					Console.WriteLine("Crawling " + URL);
+					ConfigurationManager.AppSettings["currentURL"] = URL.ToString();
 
-					TextParser tParser = new TextParser();
-					tParser.GetKeyWords(doc);
-					page.Title = tParser.GetTitle(doc);
-
-					// dapatkan data
-					MergeList(_externalUrls, lParser.ExternalUrls);
-					MergeList(_otherUrls, lParser.OtherUrls);
-					MergeList(_failedUrls, lParser.BadUrls);
-										 
-					MergeList(_keywords, tParser.Keywords);
-					
-					_exceptions.AddRange(tParser.Exceptions);
-					_exceptions.AddRange(lParser.Exceptions);
-
-					// tes keyword
-					page.Keywords.AddRange(tParser.Keywords);
-
-					_pages.Add(page);
-
-					// masukkan ke database
-					DBConnection dbConn = new DBConnection();
-					dbConn.AddPageToTable(page);
-
-					_exceptions.AddRange(dbConn.Exceptions);
-
-					foreach (var nextUrl in lParser.GoodUrls)
+					try
 					{
-						try
+						doc = GetDocument(doc, URL);
+
+						// assign dia punya page value
+						Page page = new Page();
+						page.URL = URL;
+						page.Text = doc.DocumentNode.OuterHtml;
+					
+						page.CalculateViewStateSize();
+					
+						// lakukan parsing
+						LinkParser lParser = new LinkParser();
+						lParser.ParseLinks(doc, URL);
+
+						TextParser tParser = new TextParser();
+						tParser.GetKeyWords(doc);
+						page.Title = tParser.GetTitle(doc);
+
+						// dapatkan data
+						MergeList(_externalUrls, lParser.ExternalUrls);
+						MergeList(_otherUrls, lParser.OtherUrls);
+						MergeList(_failedUrls, lParser.BadUrls);
+										 
+						MergeList(_keywords, tParser.Keywords);
+					
+						_exceptions.AddRange(tParser.Exceptions);
+						_exceptions.AddRange(lParser.Exceptions);
+
+						// tes keyword
+						page.Keywords.AddRange(tParser.Keywords);
+
+						_pages.Add(page);
+
+						// masukkan ke database
+						DBConnection dbConn = new DBConnection();
+						dbConn.AddPageToTable(page);
+
+						_exceptions.AddRange(dbConn.Exceptions);
+
+						foreach (var nextUrl in lParser.GoodUrls)
 						{
-							var next = FixLink(nextUrl, URL);
-							Uri nextURL = new Uri(next);
-							CrawlPage(nextURL, depth-1);
-						}
-						catch (Exception exc)
-						{
-							_failedUrls.Add(nextUrl +
-									" (on page at url " + URL + ") - " +
-									exc.Message);
+							try
+							{
+								var next = FixLink(nextUrl, URL);
+								Uri nextURL = new Uri(next);
+								CrawlPage(nextURL, depth-1);
+							}
+							catch (Exception exc)
+							{
+								_failedUrls.Add(nextUrl +
+										" (on page at url " + URL + ") - " +
+										exc.Message);
+							}
 						}
 					}
-				}
 
-				catch (WebException ex)
-				{
-					_exceptions.Add("Error loading document: " + ex);
-				}
-				finally
-				{
-					/* kosong */
+					catch (WebException ex)
+					{
+						_exceptions.Add("Error loading document: " + ex);
+					}
+					finally
+					{
+						/* kosong */
+					}
 				}
 			}
 		}

@@ -13,7 +13,6 @@ namespace WebCrawler
 	/// <summary>
 	/// Class yang menangani koneksi ke MySQL, berikut dengan operator-operatornya
 	/// </summary>
-	/// <remarks>ini masih pure copy-paste dari yang dikasih dariel, belum diadaptasi buat program</remarks>
 	class DBConnection
 	{
 		#region Private Instance Fields
@@ -24,9 +23,22 @@ namespace WebCrawler
 		private string uid;
 		private string password;
 		private string table;
+		
+		private List<string> _exceptions = new List<string>();
+		#endregion
+		#region Constants
+		private static const string DefaultTable = "crawler_index";
+		private static const string DefaultDB = "stima2";
+		private static const string DefaultServer = "localhost";
+		private static const string DefaultUser = "stima2";
+		private static const string DefaultPass = "stima2"; 
 		#endregion
 
-		private static const string DefaultTable = "crawlerIndex";
+		public List<string> Exceptions
+		{
+			get { return _exceptions; }
+			set { _exceptions = value; }
+		}
 		/// <summary>
 		/// Menginisialisasi DBConnection (konstruktor)
 		/// </summary>
@@ -38,10 +50,10 @@ namespace WebCrawler
 		/// <summary>
 		/// Konstruktor DBConnection dengan parameter
 		/// </summary>
-		/// <param name="serverName"></param>
-		/// <param name="dbName"></param>
-		/// <param name="uidIn"></param>
-		/// <param name="dbPassword"></param>
+		/// <param name="serverName">nama/alamat server MySQL</param>
+		/// <param name="dbName">nama database</param>
+		/// <param name="uidIn">user name</param>
+		/// <param name="dbPassword">password</param>
 		public DBConnection(string serverName,
 							string dbName,
 							string uidIn,
@@ -53,20 +65,21 @@ namespace WebCrawler
 		/// <summary>
 		/// Deklarasi dan Inisialisasi Variabel yang akan digunakan
 		/// </summary>
-		/// <param name="serverName"></param>
-		/// <param name="dbName"></param>
-		/// <param name="uidIn"></param>
-		/// <param name="dbPassword"></param>
-		private void Initialize(string serverName = "localhost",
-								string dbName = "stima2",
-								string uidIn = "stima2",
-								string dbPassword = "stima2")
+		/// <param name="serverName">nama/alamat server</param>
+		/// <param name="dbName">nama database</param>
+		/// <param name="uidIn">user name</param>
+		/// <param name="dbPassword">password</param>
+		private void Initialize(string serverName = DefaultServer,
+								string dbName = DefaultDB,
+								string uidIn = DefaultUser,
+								string dbPassword = DefaultPass)
 		{
 			server = serverName;
 			database = dbName;
 			uid = uidIn;
 			password = dbPassword;
 
+			// set the configuration
 			StringBuilder connectionString = new StringBuilder();
 			connectionString.Append("SERVER=" + server + ";");
 			connectionString.Append("DATABASE=" + database + ";");
@@ -99,8 +112,9 @@ namespace WebCrawler
 					case 1045:
 						Console.WriteLine("MySQL Error: Invalid username/password, please try again");
 						break;
-
 				}
+				_exceptions.Add(ex.ToString());
+
 				return false;
 			}
 		}
@@ -108,7 +122,7 @@ namespace WebCrawler
 		/// <summary>
 		/// Menutup koneksi untuk melepas sumber daya dan menyatakan bahwa koneksi tidak lagi dibutuhkan
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>true kalo berhasil ditutup, false kalo tidak</returns>
 		private bool CloseConnection()
 		{
 			try
@@ -118,60 +132,8 @@ namespace WebCrawler
 			}
 			catch (MySqlException ex)
 			{
-				Console.WriteLine(ex.Message);
+				_exceptions.Add("MySQL (Closing Connection) Error: " + ex);
 				return false;
-			}
-		}
-
-		/// <summary>
-		/// Menghilangkan data yang ada di database
-		/// </summary>
-		public void Delete()
-		{
-			string query = "DELETE FROM tableinfo WHERE name='John Smith'";
-
-			if (this.OpenConnection()==true)
-			{
-				MySqlCommand cmd = new MySqlCommand(query, SQLConn);
-				cmd.ExecuteNonQuery();
-				this.CloseConnection();
-			}
-		}
-
-		/// <summary>
-		/// Menyeleksi data dari query dan memasukkannya ke dalam list
-		/// </summary>
-		/// <returns></returns>
-		public List< string >[] Select()
-		{
-			string query = "SELECT * FROM tableinfo";
-
-			List< string >[] list = new List<string>[3];
-			list[0] = new List<string>();
-			list[1] = new List<string>();
-			list[2] = new List<string>();
-
-			if(this.OpenConnection()==true)
-			{
-				MySqlCommand cmd = new MySqlCommand(query,SQLConn);
-				MySqlDataReader dataReader = cmd.ExecuteReader();
-
-				while(dataReader.Read())
-				{
-					list[0].Add(dataReader["id"] + "");
-					list[1].Add(dataReader["name"] + "");
-					list[2].Add(dataReader["age"] + "");
-				}
-
-				dataReader.Close();
-
-				this.CloseConnection();
-
-				return list;
-			}
-			else
-			{
-				return list;
 			}
 		}
 
@@ -248,68 +210,112 @@ namespace WebCrawler
 				Console.WriteLine("Error , unable to restore!" + ex);
 			}
 		}
-		
 
-		/*
-		using (DbConnection connection = new SqlConnection("Your connection string")) {
-				connection.Open();
-				using (DbCommand command = new SqlCommand("alter table [Product] add [ProductId] int default 0 NOT NULL")) {
-				command.Connection = connection;
-				command.ExecuteNonQuery();
-			}
-		}
-		*/
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="page"></param>
 		public void AddPageToTable(Page page)
 		{
 			string URL = page.URL.ToString();
 
 			try {
-				foreach (string keyword in page.Keywords)
+				if (this.OpenConnection() == true)
 				{
-					AddColumn(keyword);
-					SetKeywordTrue(URL, keyword);
+					if (!CheckIfURLExists(URL))
+					{ 
+						addArrayOfKeyword(page.Keywords);
+						addURLToTable(page.URL.ToString(), page.Keywords, page.Title);
+					}
 				}
-			} catch (MySqlException ex) {
-				Console.WriteLine(ex);
+			} 
+			catch (MySqlException ex) 
+			{
+				_exceptions.Add("MySQL Error: " + ex);
+			}
+			finally
+			{
+				this.CloseConnection();
 			}
 		}
 
-		private bool CheckIfColumnExists(string word)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="stringEnum"></param>
+		/// <param name="tableName"></param>
+		private void addArrayOfKeyword(List<string> stringEnum, string tableName = DefaultTable)
 		{
-			bool retval = false;
+			// buat querynya
+			StringBuilder sb = new StringBuilder();
+			bool firstInsert = true;
 
-			using (MySqlCommand cmd = new MySqlCommand("check_column", SQLConn))
+			sb.AppendFormat("ALTER TABLE `{0}`,`{1}`", database, tableName);
+			for (int i = 0; i < stringEnum.Count - 1; i++)
 			{
-				cmd.CommandType = CommandType.StoredProcedure;
-
-				cmd.Parameters.Add(new MySqlParameter("keyword", SqlDbType.VarChar) { 
-									Value = word, Direction = ParameterDirection.Input 
-									});
-				cmd.Parameters.Add(retval);
-
-				ExecuteProc(cmd);
-				Console.WriteLine("Retval: " + retval);
-			}
-
-			return retval;
-		}
-
-		private bool AddColumn(string word)
-		{
-			bool retval = false;
-			
-			using (MySqlCommand cmd = new MySqlCommand("add_column", SQLConn))
-			{
-				cmd.CommandType = CommandType.StoredProcedure;
+				string str = stringEnum[i];
 				
-				cmd.Parameters.Add(new MySqlParameter("keyword", SqlDbType.VarChar) { 
-									Value = word, Direction = ParameterDirection.Input 
-									});
-				cmd.Parameters.Add(retval);
+				if (!CheckIfKeywordExists(str))
+				{
+					if (firstInsert)
+					{
+						sb.AppendFormat(" ADD (`{0}` BOOLEAN NOT NULL DEFAULT FALSE", str);
+						firstInsert = false;
+					}
+					else
+						sb.AppendFormat(", `{0}` BOOLEAN NOT NULL DEFAULT FALSE", str);
+				}
+			}
+			
+			// cek elemen terakhir
+			if (!CheckIfKeywordExists(stringEnum[stringEnum.Count-1]))
+			{
+				if (firstInsert)
+				{
+					sb.AppendFormat(" ADD (`{0}` BOOLEAN NOT NULL DEFAULT FALSE);", stringEnum[stringEnum.Count - 1]);
+					firstInsert = false;
+				}
+				else
+					sb.AppendFormat(", `{0}` BOOLEAN NOT NULL DEFAULT FALSE);", stringEnum[stringEnum.Count - 1]);
+			}
+			else
+			{
+				if (!firstInsert)
+					sb.Append(");");
+				else
+					sb.Append(";");
+			}
 
-				ExecuteProc(cmd);
-				Console.WriteLine("Retval: " + retval);
+			ExecuteQuery(sb.ToString());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="URL"></param>
+		/// <returns></returns>
+		private bool CheckIfURLExists(string URL)
+		{
+			bool retval = false;
+
+			using (MySqlCommand cmd = new MySqlCommand("check_url", SQLConn))
+			{
+				cmd.CommandType = CommandType.StoredProcedure;
+
+				cmd.Parameters.AddWithValue("url_target", URL);
+				cmd.Parameters.AddWithValue("retval", MySqlDbType.Int32);
+				cmd.Parameters["retval"].Direction = ParameterDirection.ReturnValue;
+				
+				try
+				{
+					cmd.ExecuteNonQuery();
+					
+					retval = Convert.ToBoolean(cmd.Parameters["retval"].Value);
+				} 
+				catch (MySqlException)
+				{
+					throw;
+				}
 			}
 
 			return retval;
@@ -318,52 +324,77 @@ namespace WebCrawler
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Url"></param>
-		/// <param name="Keyword"></param>
+		/// <param name="word"></param>
 		/// <returns></returns>
-		private bool SetKeywordTrue(string Url, string Keyword)
+		private bool CheckIfKeywordExists(string word)
 		{
 			bool retval = false;
 
-			using (MySqlCommand cmd = new MySqlCommand("set_keyword_true", SQLConn))
+			using (MySqlCommand cmd = new MySqlCommand("check_keyword", SQLConn))
 			{
 				cmd.CommandType = CommandType.StoredProcedure;
 
-				cmd.Parameters.Add(new MySqlParameter("url_in", SqlDbType.VarChar) { 
-									Value = Url, Direction = ParameterDirection.Input 
-									});
-				cmd.Parameters.Add(new MySqlParameter("keyword", SqlDbType.VarChar) { 
-									Value = Keyword, Direction = ParameterDirection.Input
-									});
-				cmd.Parameters.Add(retval);
-
-				ExecuteProc(cmd);
-				Console.WriteLine("Retval: " + retval);
-			}
-
-			return retval;
-		}
-		
-		private void ExecuteProc(MySqlCommand cmd)
-		{
-			if (this.OpenConnection() == true)
-			{
+				cmd.Parameters.AddWithValue("keyword", word);
+				cmd.Parameters.AddWithValue("retval", MySqlDbType.Int32);
+				cmd.Parameters["retval"].Direction = ParameterDirection.ReturnValue;
+				
 				try
 				{
 					cmd.ExecuteNonQuery();
-				}
+
+					retval = Convert.ToBoolean(cmd.Parameters["retval"].Value);
+				} 
 				catch (MySqlException)
 				{
 					throw;
 				}
-				finally
-				{
-					this.CloseConnection();
-				}
 			}
+
+			return retval;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="URL"></param>
+		/// <param name="keyWords"></param>
+		/// <param name="title"></param>
+		/// <param name="tableName"></param>
+		private void addURLToTable(string URL, List<string> keyWords,
+								   string title = "(no title)", string tableName = DefaultTable)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.AppendFormat("INSERT INTO `{0}`.`{1}` (`url`, `title`", database, tableName);
+			int max = keyWords.Count;
+
+			foreach (string keyword in keyWords)
+			{
+				sb.AppendFormat(", `{0}`", keyword);
+			}
+
+			sb.AppendFormat(") VALUES ('{0}', '{1}'", URL, title);
+			for (int i = 0; i < max; i++)
+			{
+				sb.Append(", TRUE");
+			}
+			sb.Append(");");
+
+			ExecuteQuery(sb.ToString());
+		}
+
+		private void ExecuteQuery(string query)
+		{
+			// eksekusi
+			try 
+			{ 
+				MySqlCommand cmd = new MySqlCommand(query, SQLConn);
+				cmd.ExecuteNonQuery();
+			}
+			catch (MySqlException)
+			{
+				throw;
+			}
+		}
 	}
 }
-
-//bedanya addcolumn, checkifcolumnexists, sama setkeywordtrue

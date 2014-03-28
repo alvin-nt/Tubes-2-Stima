@@ -26,6 +26,7 @@ namespace WebCrawler
 
 		private int _size; // ukuran page?
 		private string _text; // teks dalam page?
+		private string _title;
 		private Uri _url; // URL dari page
 		private int _viewStateSize; // ??
 		private List<string> _keywords = new List<string>();
@@ -49,6 +50,12 @@ namespace WebCrawler
 				_text = value;
 				_size = value.Length;
 			}
+		}
+
+		public string Title
+		{
+			get { return _title; }
+			set	{ _title = value; }
 		}
 
 		public Uri URL

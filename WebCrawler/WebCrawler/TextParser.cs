@@ -146,5 +146,25 @@ namespace WebCrawler
 
 			return sb.ToString();
 		}
+
+		public string GetTitle(HtmlDocument doc)
+		{
+			string tag = "//title";
+			string title = "(no title)";
+			var root = doc.DocumentNode;
+
+			if (root.HasChildNodes)
+			{
+				var titleNode = root.SelectSingleNode(tag);
+
+				if (titleNode != null)
+				{
+					var temp = titleNode.InnerText.Trim();
+					title = (String.IsNullOrWhiteSpace(temp) ? "(no title)" : temp);
+				}
+			}
+
+			return title;
+		}
 	}
 }

@@ -32,8 +32,6 @@ namespace WebCrawler
 		{
 			Console.WriteLine("Beginning crawl.");
 
-			//CrawlPage(ConfigurationManager.AppSettings["url"]);
-			string configUrl = ConfigurationManager.AppSettings["url"];
 			try
 			{
 				FileOperators.LoadToListOfString(filename, _ignoredPages);
@@ -43,8 +41,8 @@ namespace WebCrawler
 				_exceptions.Add("Crawler Error: " + ex);
 			}
 
+			string configUrl = ConfigurationManager.AppSettings["url"];
 			Uri rootUrl = new Uri(configUrl);
-			
 			CrawlPage(rootUrl, 10);
 
 			StringBuilder sb = CreateReport();
@@ -87,6 +85,7 @@ namespace WebCrawler
 
 					TextParser tParser = new TextParser();
 					tParser.GetKeyWords(doc);
+					page.Title = tParser.GetTitle(doc);
 
 					// dapatkan data
 					MergeList(_externalUrls, lParser.ExternalUrls);
@@ -100,9 +99,14 @@ namespace WebCrawler
 
 					// tes keyword
 					page.Keywords.AddRange(tParser.Keywords);
-					page.printKeywords();
 
 					_pages.Add(page);
+
+					// masukkan ke database
+					DBConnection dbConn = new DBConnection();
+					dbConn.AddPageToTable(page);
+
+					_exceptions.AddRange(dbConn.Exceptions);
 
 					foreach (var nextUrl in lParser.GoodUrls)
 					{
@@ -160,20 +164,6 @@ namespace WebCrawler
 
 			return doc;
 		}
-
-		//private static void CheckResponse(HttpWebResponse resp)
-		//{
-		//    Console.WriteLine("Response: " + resp.Headers["Location"]);
-
-		//    foreach (string s in _ignoredPages)
-		//    {
-		//        if (!String.IsNullOrWhiteSpace(resp.Headers["Location"]))
-		//            if (resp.Headers["Location"].Contains(s))
-		//            {
-		//                throw new WebException("Page ignored: " + resp.ResponseUri);
-		//            }
-		//    }
-		//}
 
 		/// <summary>
 		/// Apakah page sudah di-crawl?

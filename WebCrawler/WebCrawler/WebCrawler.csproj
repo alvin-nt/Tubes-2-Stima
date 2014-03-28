@@ -118,8 +118,8 @@
     <Content Include="Interop.SHDocVw.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="misc\add_column.sql" />
-    <None Include="misc\set_keyword_true.sql" />
+    <Content Include="misc\check_keyword.sql" />
+    <Content Include="misc\check_url.sql" />
     <Content Include="Readme.txt" />
     <Content Include="webui\hubble.png" />
     <Content Include="webui\style.css" />

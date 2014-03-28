@@ -100,6 +100,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="webui\about.php" />
+    <None Include="webui\algo.php" />
+    <None Include="webui\crawl.php" />
+    <None Include="webui\index.php" />
+    <None Include="webui\search.php" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -116,6 +121,8 @@
     <None Include="misc\add_column.sql" />
     <None Include="misc\set_keyword_true.sql" />
     <Content Include="Readme.txt" />
+    <Content Include="webui\hubble.png" />
+    <Content Include="webui\style.css" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

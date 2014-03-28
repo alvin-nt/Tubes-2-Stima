@@ -121,6 +121,7 @@
     </Content>
     <Content Include="misc\check_keyword.sql" />
     <Content Include="misc\check_url.sql" />
+    <Content Include="misc\stima2_schema_example.sql" />
     <Content Include="Readme.txt" />
     <Content Include="webui\hubble.png" />
     <Content Include="webui\style.css" />

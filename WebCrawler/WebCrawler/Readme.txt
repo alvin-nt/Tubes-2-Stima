@@ -14,10 +14,8 @@ Rencana skema tabel program:
 --- (string) --- (string) --- (boolean) --- (boolean) --- ... --- (boolean) ---
 
 TODO (global):
-- modul Query >> (Josh & Dariel) (pake SQL?)
 - bikin GUI untuk Explorer & Crawler, termasuk untuk pengaturan konfigurasinya
-- Lengkapi textfile ignored.txt (nanti di-rename), ignored_pages.txt, dan domains.txt
-- Kaitkan program dengan SQLite >> List?
+- Lengkapi textfile ignored.txt, ignored_pages.txt, dan domains.txt
 - algoritma BFS (Dariel)
 - (bonus round) >> pake multithread untuk pemrosesan, biar lebih cepat
 - (bonus round) >> cari cara penanganan PHP redirect, biar ngga usah nge-parse webpage yang berupa login, signup, etc.

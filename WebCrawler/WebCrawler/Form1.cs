@@ -45,18 +45,25 @@ namespace WebCrawler {
 			ConfigurationManager.AppSettings["dbServer"] = inDbServer.Text;
 			ConfigurationManager.AppSettings["crawlDepth"] = depthLimit.Text;
 			ConfigurationManager.AppSettings["url"] = urlToCrawl.Text;
+			ConfigurationManager.AppSettings["abort"] = "no";
+			ConfigurationManager.AppSettings["currentURL"] = "";
+			ConfigurationManager.AppSettings["totalCrawled"] = "";
+			ConfigurationManager.AppSettings["bytesCrawled"] = "";
+			ConfigurationManager.AppSettings["ignoredURL"] = "";
+			ConfigurationManager.AppSettings["externalURL"] = "";
 			if (htmlOutput.Checked) {
 				logFile.ShowDialog();
+				ConfigurationManager.AppSettings["doLog"] = "true";
+			} else {
+				ConfigurationManager.AppSettings["doLog"] = "false";
 			}
 			crawler.RunWorkerAsync();
 		}
 
 		private void beginCrawl(object sender, DoWorkEventArgs e) {
 			if (bfs.Checked) {
-				Console.WriteLine("Ugh cant do...");
-				//CrawlerBFS.CrawlSite();
+				CrawlerBFS.CrawlSite();
 			} else if (dfs.Checked) {
-
 				Crawler.CrawlSite();
 			}
 		}
@@ -64,12 +71,7 @@ namespace WebCrawler {
 		private void crawlEnded(object sender, RunWorkerCompletedEventArgs e) {
 			abortCrawl.Enabled = false;
 			doCrawl.Enabled = true;
-			ConfigurationManager.AppSettings["abort"] = "no";
 			ConfigurationManager.AppSettings["currentURL"] = "";
-		}
-
-		private void crawlProgress(object sender, ProgressChangedEventArgs e) {
-
 		}
 
 		private void logFile_FileOK(object sender, CancelEventArgs e) {

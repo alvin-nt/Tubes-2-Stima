@@ -49,16 +49,16 @@
 			this.logFile = new System.Windows.Forms.SaveFileDialog();
 			this.label8 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.depthLimit = new System.Windows.Forms.NumericUpDown();
-			this.inDbServer = new System.Windows.Forms.TextBox();
-			this.label9 = new System.Windows.Forms.Label();
-			this.inDbName = new System.Windows.Forms.TextBox();
-			this.inDbUser = new System.Windows.Forms.TextBox();
-			this.inDbPass = new System.Windows.Forms.TextBox();
-			this.label10 = new System.Windows.Forms.Label();
-			this.label11 = new System.Windows.Forms.Label();
-			this.inDbTable = new System.Windows.Forms.TextBox();
 			this.label12 = new System.Windows.Forms.Label();
+			this.inDbTable = new System.Windows.Forms.TextBox();
+			this.label11 = new System.Windows.Forms.Label();
+			this.label10 = new System.Windows.Forms.Label();
+			this.inDbPass = new System.Windows.Forms.TextBox();
+			this.inDbUser = new System.Windows.Forms.TextBox();
+			this.inDbName = new System.Windows.Forms.TextBox();
+			this.label9 = new System.Windows.Forms.Label();
+			this.inDbServer = new System.Windows.Forms.TextBox();
+			this.depthLimit = new System.Windows.Forms.NumericUpDown();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.groupBox4 = new System.Windows.Forms.GroupBox();
 			this.abortCrawl = new System.Windows.Forms.Button();
@@ -122,7 +122,6 @@
 			// crawler
 			// 
 			this.crawler.DoWork += new System.ComponentModel.DoWorkEventHandler(this.beginCrawl);
-			this.crawler.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.crawlProgress);
 			this.crawler.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.crawlEnded);
 			// 
 			// label2
@@ -228,13 +227,11 @@
 			this.currentCrawlText.AutoSize = true;
 			this.currentCrawlText.Location = new System.Drawing.Point(7, 21);
 			this.currentCrawlText.Name = "currentCrawlText";
-			this.currentCrawlText.Size = new System.Drawing.Size(54, 13);
+			this.currentCrawlText.Size = new System.Drawing.Size(0, 13);
 			this.currentCrawlText.TabIndex = 8;
-			this.currentCrawlText.Text = "<nothing>";
 			// 
 			// htmlOutput
 			// 
-			this.htmlOutput.AutoCheck = false;
 			this.htmlOutput.AutoSize = true;
 			this.htmlOutput.Location = new System.Drawing.Point(131, 43);
 			this.htmlOutput.Name = "htmlOutput";
@@ -249,7 +246,7 @@
 			this.logFile.FileName = "HSTlog.html";
 			this.logFile.Filter = "HTML File|*.html";
 			this.logFile.InitialDirectory = "C:\\";
-			this.logFile.Title = "Save Log as...";
+			this.logFile.Title = "Save Log to...";
 			this.logFile.FileOk += new System.ComponentModel.CancelEventHandler(this.logFile_FileOK);
 			// 
 			// label8
@@ -280,6 +277,82 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Database Settings";
 			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Location = new System.Drawing.Point(7, 129);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(34, 13);
+			this.label12.TabIndex = 19;
+			this.label12.Text = "Table";
+			// 
+			// inDbTable
+			// 
+			this.inDbTable.Location = new System.Drawing.Point(61, 126);
+			this.inDbTable.Name = "inDbTable";
+			this.inDbTable.Size = new System.Drawing.Size(139, 20);
+			this.inDbTable.TabIndex = 18;
+			this.inDbTable.Text = "index";
+			// 
+			// label11
+			// 
+			this.label11.AutoSize = true;
+			this.label11.Location = new System.Drawing.Point(7, 103);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(53, 13);
+			this.label11.TabIndex = 17;
+			this.label11.Text = "Password";
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(6, 77);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(55, 13);
+			this.label10.TabIndex = 16;
+			this.label10.Text = "Username";
+			// 
+			// inDbPass
+			// 
+			this.inDbPass.Location = new System.Drawing.Point(61, 100);
+			this.inDbPass.Name = "inDbPass";
+			this.inDbPass.Size = new System.Drawing.Size(139, 20);
+			this.inDbPass.TabIndex = 15;
+			this.inDbPass.Text = "stima2";
+			// 
+			// inDbUser
+			// 
+			this.inDbUser.Location = new System.Drawing.Point(61, 74);
+			this.inDbUser.Name = "inDbUser";
+			this.inDbUser.Size = new System.Drawing.Size(139, 20);
+			this.inDbUser.TabIndex = 14;
+			this.inDbUser.Text = "stima2";
+			// 
+			// inDbName
+			// 
+			this.inDbName.Location = new System.Drawing.Point(61, 48);
+			this.inDbName.Name = "inDbName";
+			this.inDbName.Size = new System.Drawing.Size(139, 20);
+			this.inDbName.TabIndex = 13;
+			this.inDbName.Text = "stima2";
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(7, 51);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(53, 13);
+			this.label9.TabIndex = 12;
+			this.label9.Text = "DB Name";
+			// 
+			// inDbServer
+			// 
+			this.inDbServer.Location = new System.Drawing.Point(61, 22);
+			this.inDbServer.Name = "inDbServer";
+			this.inDbServer.Size = new System.Drawing.Size(139, 20);
+			this.inDbServer.TabIndex = 11;
+			this.inDbServer.Text = "localhost";
+			// 
 			// depthLimit
 			// 
 			this.depthLimit.Location = new System.Drawing.Point(197, 19);
@@ -296,82 +369,6 @@
             0,
             0,
             0});
-			// 
-			// inDbServer
-			// 
-			this.inDbServer.Location = new System.Drawing.Point(61, 22);
-			this.inDbServer.Name = "inDbServer";
-			this.inDbServer.Size = new System.Drawing.Size(139, 20);
-			this.inDbServer.TabIndex = 11;
-			this.inDbServer.Text = "localhost";
-			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(7, 51);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(53, 13);
-			this.label9.TabIndex = 12;
-			this.label9.Text = "DB Name";
-			// 
-			// inDbName
-			// 
-			this.inDbName.Location = new System.Drawing.Point(61, 48);
-			this.inDbName.Name = "inDbName";
-			this.inDbName.Size = new System.Drawing.Size(139, 20);
-			this.inDbName.TabIndex = 13;
-			this.inDbName.Text = "stima2";
-			// 
-			// inDbUser
-			// 
-			this.inDbUser.Location = new System.Drawing.Point(61, 74);
-			this.inDbUser.Name = "inDbUser";
-			this.inDbUser.Size = new System.Drawing.Size(139, 20);
-			this.inDbUser.TabIndex = 14;
-			this.inDbUser.Text = "stima2";
-			// 
-			// inDbPass
-			// 
-			this.inDbPass.Location = new System.Drawing.Point(61, 100);
-			this.inDbPass.Name = "inDbPass";
-			this.inDbPass.Size = new System.Drawing.Size(139, 20);
-			this.inDbPass.TabIndex = 15;
-			this.inDbPass.Text = "stima2";
-			// 
-			// label10
-			// 
-			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(6, 77);
-			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(55, 13);
-			this.label10.TabIndex = 16;
-			this.label10.Text = "Username";
-			// 
-			// label11
-			// 
-			this.label11.AutoSize = true;
-			this.label11.Location = new System.Drawing.Point(7, 103);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(53, 13);
-			this.label11.TabIndex = 17;
-			this.label11.Text = "Password";
-			// 
-			// inDbTable
-			// 
-			this.inDbTable.Location = new System.Drawing.Point(61, 126);
-			this.inDbTable.Name = "inDbTable";
-			this.inDbTable.Size = new System.Drawing.Size(139, 20);
-			this.inDbTable.TabIndex = 18;
-			this.inDbTable.Text = "index";
-			// 
-			// label12
-			// 
-			this.label12.AutoSize = true;
-			this.label12.Location = new System.Drawing.Point(7, 129);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(34, 13);
-			this.label12.TabIndex = 19;
-			this.label12.Text = "Table";
 			// 
 			// groupBox3
 			// 

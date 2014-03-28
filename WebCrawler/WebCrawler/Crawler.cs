@@ -248,7 +248,7 @@ namespace WebCrawler
 		{
 			StringBuilder sb = new StringBuilder();
 
-			sb.Append("<html><head><title>Crawl Report</title><style>");
+			sb.Append("<html><head><title>Hubble Search Telescope - Crawl Report</title><style>");
 			sb.Append("table { border: solid 3px black; border-collapse: collapse; }");
 			sb.Append("table tr th { font-weight: bold; padding: 3px; padding-left: 10px; padding-right: 10px; }");
 			sb.Append("table tr td { border: solid 1px black; padding: 3px;}");
@@ -256,7 +256,7 @@ namespace WebCrawler
 			sb.Append("p { font-family: Rockwell; font-size: smaller; }");
 			sb.Append("h2 { margin-top: 45px; }");
 			sb.Append("</style></head><body>");
-			sb.Append("<h1>Crawl Report</h1>");
+			sb.Append("<h1>Hubble Search Telescope - Crawl Report</h1>");
 
 			sb.Append("<h2>Internal Urls - In Order Crawled</h2>");
 			sb.Append("<p>These are the pages found within the site. The size is calculated by getting value of the Length of the text of the response text. This is the order in which they were crawled.</p>");

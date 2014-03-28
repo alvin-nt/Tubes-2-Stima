@@ -6,6 +6,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using System.IO;
+using System.Configuration;
 
 
 namespace WebCrawler
@@ -27,11 +28,6 @@ namespace WebCrawler
 		private List<string> _exceptions = new List<string>();
 		#endregion
 		#region Constants
-		private const string DefaultTable = "crawler_index";
-		private const string DefaultDB = "stima2";
-		private const string DefaultServer = "localhost";
-		private const string DefaultUser = "stima2";
-		private const string DefaultPass = "stima2"; 
 		#endregion
 
 		public List<string> Exceptions
@@ -48,36 +44,14 @@ namespace WebCrawler
 		}
 
 		/// <summary>
-		/// Konstruktor DBConnection dengan parameter
-		/// </summary>
-		/// <param name="serverName">nama/alamat server MySQL</param>
-		/// <param name="dbName">nama database</param>
-		/// <param name="uidIn">user name</param>
-		/// <param name="dbPassword">password</param>
-		public DBConnection(string serverName,
-							string dbName,
-							string uidIn,
-							string dbPassword)
-		{
-			Initialize(serverName, dbName, uidIn, dbPassword);
-		}
-
-		/// <summary>
 		/// Deklarasi dan Inisialisasi Variabel yang akan digunakan
 		/// </summary>
-		/// <param name="serverName">nama/alamat server</param>
-		/// <param name="dbName">nama database</param>
-		/// <param name="uidIn">user name</param>
-		/// <param name="dbPassword">password</param>
-		private void Initialize(string serverName = DefaultServer,
-								string dbName = DefaultDB,
-								string uidIn = DefaultUser,
-								string dbPassword = DefaultPass)
+		private void Initialize()
 		{
-			server = serverName;
-			database = dbName;
-			uid = uidIn;
-			password = dbPassword;
+			server = ConfigurationManager.AppSettings["dbServer"];
+			database = ConfigurationManager.AppSettings["dbName"];
+			uid = ConfigurationManager.AppSettings["dbUser"];
+			password = ConfigurationManager.AppSettings["dbPass"];
 
 			// set the configuration
 			StringBuilder connectionString = new StringBuilder();
@@ -243,14 +217,14 @@ namespace WebCrawler
 		/// 
 		/// </summary>
 		/// <param name="stringEnum"></param>
-		/// <param name="tableName"></param>
-		private void addArrayOfKeyword(List<string> stringEnum, string tableName = DefaultTable)
+		private void addArrayOfKeyword(List<string> stringEnum)
 		{
+			string tableName = ConfigurationManager.AppSettings["dbTable"];
 			// buat querynya
 			StringBuilder sb = new StringBuilder();
 			bool firstInsert = true;
 
-			sb.AppendFormat("ALTER TABLE `{0}`,`{1}`", database, tableName);
+			sb.AppendFormat("ALTER TABLE `{0}`", tableName);
 			for (int i = 0; i < stringEnum.Count - 1; i++)
 			{
 				string str = stringEnum[i];
@@ -359,13 +333,13 @@ namespace WebCrawler
 		/// <param name="URL"></param>
 		/// <param name="keyWords"></param>
 		/// <param name="title"></param>
-		/// <param name="tableName"></param>
 		private void addURLToTable(string URL, List<string> keyWords,
-								   string title = "(no title)", string tableName = DefaultTable)
+								   string title = "(no title)")
 		{
+			string tableName = ConfigurationManager.AppSettings["dbTable"];
 			StringBuilder sb = new StringBuilder();
 
-			sb.AppendFormat("INSERT INTO `{0}`.`{1}` (`url`, `title`", database, tableName);
+			sb.AppendFormat("INSERT INTO `{0}` (`url`, `title`", tableName);
 			int max = keyWords.Count;
 
 			foreach (string keyword in keyWords)

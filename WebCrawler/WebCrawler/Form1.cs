@@ -11,8 +11,14 @@ using System.Configuration;
 using System.Threading;
 
 namespace WebCrawler {
+	/// <summary>
+	/// The Main Form
+	/// </summary>
 	public partial class Form1 : Form {
 
+		/// <summary>
+		/// GUI Data Capsule - for updating the main GUI
+		/// </summary>
 		class GuiDataCapsule {
 			public string currentURL;
 			public string totalCrawled;
@@ -28,6 +34,9 @@ namespace WebCrawler {
 			}
 		}
 
+		/// <summary>
+		/// CTOOR
+		/// </summary>
 		public Form1() {
 			InitializeComponent();
 			abortCrawl.Enabled = false;
@@ -35,6 +44,9 @@ namespace WebCrawler {
 			urlUpdater.RunWorkerAsync();
 		}
 
+		/// <summary>
+		/// Begin Crawl. set all variables and get ready to command the slave
+		/// </summary>
 		private void doCrawl_Click(object sender, EventArgs e) {
 			abortCrawl.Enabled = true;
 			doCrawl.Enabled = false;
@@ -60,6 +72,9 @@ namespace WebCrawler {
 			crawler.RunWorkerAsync();
 		}
 
+		/// <summary>
+		/// Let the slave crawl.
+		/// </summary>
 		private void beginCrawl(object sender, DoWorkEventArgs e) {
 			if (bfs.Checked) {
 				CrawlerBFS.CrawlSite();
@@ -68,6 +83,9 @@ namespace WebCrawler {
 			}
 		}
 
+		/// <summary>
+		/// The slave has returned!
+		/// </summary>
 		private void crawlEnded(object sender, RunWorkerCompletedEventArgs e) {
 			abortCrawl.Enabled = false;
 			doCrawl.Enabled = true;
@@ -82,6 +100,9 @@ namespace WebCrawler {
 			ConfigurationManager.AppSettings["abort"] = "yes";
 		}
 
+		/// <summary>
+		/// Keep the main GUI updated with info, this is another slave feeding data to GUI asynchronously
+		/// </summary>
 		private void urlUpdaterStart(object sender, DoWorkEventArgs e) {
 			while (true) {
 				urlUpdater.ReportProgress(0, new GuiDataCapsule(ConfigurationManager.AppSettings["currentURL"],
@@ -93,6 +114,9 @@ namespace WebCrawler {
 			}
 		}
 
+		/// <summary>
+		/// Get the data from the slave to update GUI
+		/// </summary>
 		private void urlUpdaterModify(object sender, ProgressChangedEventArgs e) {
 			GuiDataCapsule data = e.UserState as GuiDataCapsule;
 			currentCrawlText.Text = data.currentURL;

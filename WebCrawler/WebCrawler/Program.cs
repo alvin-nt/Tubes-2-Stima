@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WebCrawler
 {
@@ -24,11 +25,10 @@ namespace WebCrawler
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			NativeMethods.AllocConsole();
-			
-			Crawler.CrawlSite();
-
-			Console.ReadLine();
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new Form1());
+			//Console output will be redirected to "output" pane of Visual Studio.
 		}
 
 	}

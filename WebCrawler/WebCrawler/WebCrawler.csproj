@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="crawlerBFS.cs" />
     <Compile Include="Crawler.cs" />
     <Compile Include="CSSClassParser.cs" />
     <Compile Include="DBConnection.cs" />

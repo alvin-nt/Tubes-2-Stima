@@ -11,6 +11,7 @@ namespace WebCrawler
 {
 	public static class Crawler
 	{
+
 		#region Private Fields
 		private static List<Page> _pages = new List<Page>();
 		private static List<string> _externalUrls = new List<string>();
@@ -211,6 +212,8 @@ namespace WebCrawler
 
 			return retval.ToString();
 		}
+
+
 
 		#region Logging and Reporting
 

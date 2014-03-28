@@ -67,6 +67,7 @@ div.results {
     margin: 10px 0px 0px 0px;
     padding: 10px;
     text-align: left;
+    box-shadow: 1px 1px 1px #fff;
 }
 
 a {

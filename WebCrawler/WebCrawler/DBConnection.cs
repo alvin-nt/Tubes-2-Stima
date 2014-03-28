@@ -27,11 +27,11 @@ namespace WebCrawler
 		private List<string> _exceptions = new List<string>();
 		#endregion
 		#region Constants
-		private static const string DefaultTable = "crawler_index";
-		private static const string DefaultDB = "stima2";
-		private static const string DefaultServer = "localhost";
-		private static const string DefaultUser = "stima2";
-		private static const string DefaultPass = "stima2"; 
+		private const string DefaultTable = "crawler_index";
+		private const string DefaultDB = "stima2";
+		private const string DefaultServer = "localhost";
+		private const string DefaultUser = "stima2";
+		private const string DefaultPass = "stima2"; 
 		#endregion
 
 		public List<string> Exceptions

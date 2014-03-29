@@ -185,8 +185,17 @@ namespace WebCrawler
 						case "htm":
 							retval = true;
 							break;
+						case "jpeg":
+						case "jpg":
+						case "pdf":
+						case "png":
+						case "mp3":
+						case "wma":
+						case "doc":
+						case "docx":
+						case "xls":
 						default:
-							retval = false;
+							retval = true;
 							break;
 					}
 				}

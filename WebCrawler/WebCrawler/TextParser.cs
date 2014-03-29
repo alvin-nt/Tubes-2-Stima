@@ -147,6 +147,11 @@ namespace WebCrawler
 			return sb.ToString();
 		}
 
+		/// <summary>
+		/// Mendapatkan judul dari dokumen HTML
+		/// </summary>
+		/// <param name="doc"></param>
+		/// <returns></returns>
 		public string GetTitle(HtmlDocument doc)
 		{
 			string tag = "//title";

@@ -212,7 +212,7 @@ namespace WebCrawler
 		}
 
 		/// <summary>
-		/// 
+		/// Menambahkan page baru ke tabel
 		/// </summary>
 		/// <param name="page"></param>
 		public void AddPageToTable(Page page)
@@ -240,7 +240,7 @@ namespace WebCrawler
 		}
 
 		/// <summary>
-		/// 
+		/// Menambahkan array keyword ke tabel
 		/// </summary>
 		/// <param name="stringEnum"></param>
 		/// <param name="tableName"></param>
@@ -290,7 +290,7 @@ namespace WebCrawler
 		}
 
 		/// <summary>
-		/// 
+		/// Mengecek apakah terdapat URL tersebut
 		/// </summary>
 		/// <param name="URL"></param>
 		/// <returns></returns>
@@ -322,7 +322,7 @@ namespace WebCrawler
 		}
 		
 		/// <summary>
-		/// 
+		/// Mengecek apakah terdapat keyword
 		/// </summary>
 		/// <param name="word"></param>
 		/// <returns></returns>
@@ -354,7 +354,7 @@ namespace WebCrawler
 		}
 
 		/// <summary>
-		/// 
+		/// Menambakhan URL ke tabel
 		/// </summary>
 		/// <param name="URL"></param>
 		/// <param name="keyWords"></param>
@@ -383,6 +383,10 @@ namespace WebCrawler
 			ExecuteQuery(sb.ToString());
 		}
 
+		/// <summary>
+		/// Eksekusi query
+		/// </summary>
+		/// <param name="query"></param>
 		private void ExecuteQuery(string query)
 		{
 			// eksekusi

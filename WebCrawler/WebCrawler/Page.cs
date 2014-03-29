@@ -95,6 +95,9 @@ namespace WebCrawler
 			}
 		}
 
+		/// <summary>
+		/// untuk mengeluarkan keyword
+		/// </summary>
 		public void printKeywords()
 		{
 			foreach (string word in _keywords)

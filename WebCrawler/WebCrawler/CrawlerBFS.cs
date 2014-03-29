@@ -7,10 +7,8 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace WebCrawler
-{
-	public static class Crawler
-	{
+namespace WebCrawler {
+	public static class CrawlerBFS {
 
 		#region Private Fields
 		private static List<Page> _pages = new List<Page>();
@@ -29,24 +27,27 @@ namespace WebCrawler
 		/// <summary>
 		/// Mulai crawling
 		/// </summary>
-		public static void CrawlSite(string filename = "ignored_pages.txt")
-		{
+		public static void CrawlSite(string filename = "ignored_pages.txt") {
 			Console.WriteLine("Beginning crawl.");
 
-			try
-			{
+			try {
 				FileOperators.LoadToListOfString(filename, _ignoredPages);
 			}
-			catch (IOException ex)
-			{
+			catch (IOException ex) {
 				_exceptions.Add("Crawler Error: " + ex);
 			}
 
 			string configUrl = ConfigurationManager.AppSettings["url"];
 			Uri rootUrl = new Uri(configUrl);
-			CrawlPage(rootUrl, Convert.ToInt16(ConfigurationManager.AppSettings["crawlDepth"]));
 
-			if (ConfigurationManager.AppSettings["doLog"] == "true") { 
+			int targetDepth = Convert.ToInt16(ConfigurationManager.AppSettings["crawlDepth"]);
+
+			for (int i = 2; i <= targetDepth; i++) {
+				Console.WriteLine("Iterative Depth " + i + " towards " + targetDepth);
+				CrawlPage(rootUrl, i);
+			}
+
+			if (ConfigurationManager.AppSettings["doLog"] == "true") {
 				StringBuilder sb = CreateReport();
 				WriteReportToDisk(sb.ToString());
 				OpenReportInIE();
@@ -60,10 +61,8 @@ namespace WebCrawler
 		/// </summary>
 		/// <param name="URL">URL yang mau di-crawl</param>
 		/// <param name="depth">max depth</param>
-		public static void CrawlPage(Uri URL, int depth)
-		{
-			if (ConfigurationManager.AppSettings["abort"] == "no")
-			{ 
+		public static void CrawlPage(Uri URL, int depth) {
+			if (ConfigurationManager.AppSettings["abort"] == "no") {
 				Console.WriteLine("Depth is " + depth);
 				ConfigurationManager.AppSettings["totalCrawled"] = Convert.ToString(_pages.Count);
 				ConfigurationManager.AppSettings["ignoredURL"] = Convert.ToString(_ignoredPages.Count);
@@ -72,27 +71,25 @@ namespace WebCrawler
 				foreach (Page page in _pages) {
 					totalsize += page.Size;
 				}
-				ConfigurationManager.AppSettings["bytesCrawled"] = Convert.ToString(totalsize/1000);
+				ConfigurationManager.AppSettings["bytesCrawled"] = Convert.ToString(totalsize / 1000);
 
-				if (!PageHasBeenCrawled(URL) && depth > 0)
-				{
+				if (depth > 0) {
 					HtmlDocument doc = new HtmlDocument();
 
 					// output sementara
 					Console.WriteLine("Crawling " + URL);
 					ConfigurationManager.AppSettings["currentURL"] = URL.ToString();
 
-					try
-					{
+					try {
 						doc = GetDocument(doc, URL);
 
 						// assign dia punya page value
 						Page page = new Page();
 						page.URL = URL;
 						page.Text = doc.DocumentNode.OuterHtml;
-					
+
 						page.CalculateViewStateSize();
-					
+
 						// lakukan parsing
 						LinkParser lParser = new LinkParser();
 						lParser.ParseLinks(doc, URL);
@@ -105,33 +102,32 @@ namespace WebCrawler
 						MergeList(_externalUrls, lParser.ExternalUrls);
 						MergeList(_otherUrls, lParser.OtherUrls);
 						MergeList(_failedUrls, lParser.BadUrls);
-										 
+
 						MergeList(_keywords, tParser.Keywords);
-					
+
 						_exceptions.AddRange(tParser.Exceptions);
 						_exceptions.AddRange(lParser.Exceptions);
 
-						// tes keyword
-						page.Keywords.AddRange(tParser.Keywords);
+						if (!PageHasBeenCrawled(URL)) {
+							// tes keyword
+							page.Keywords.AddRange(tParser.Keywords);
 
-						_pages.Add(page);
+							_pages.Add(page);
 
-						// masukkan ke database
-						DBConnection dbConn = new DBConnection();
-						dbConn.AddPageToTable(page);
+							// masukkan ke database
+							DBConnection dbConn = new DBConnection();
+							dbConn.AddPageToTable(page);
 
-						_exceptions.AddRange(dbConn.Exceptions);
-
-						foreach (var nextUrl in lParser.GoodUrls)
-						{
-							try
-							{
+							_exceptions.AddRange(dbConn.Exceptions);
+						}
+						// get next strings
+						foreach (var nextUrl in lParser.GoodUrls) {
+							try {
 								var next = FixLink(nextUrl, URL);
 								Uri nextURL = new Uri(next);
-								CrawlPage(nextURL, depth-1);
+								CrawlPage(nextURL, depth - 1);
 							}
-							catch (Exception exc)
-							{
+							catch (Exception exc) {
 								_failedUrls.Add(nextUrl +
 										" (on page at url " + URL + ") - " +
 										exc.Message);
@@ -139,12 +135,10 @@ namespace WebCrawler
 						}
 					}
 
-					catch (WebException ex)
-					{
+					catch (WebException ex) {
 						_exceptions.Add("Error loading document: " + ex);
 					}
-					finally
-					{
+					finally {
 						/* kosong */
 					}
 				}
@@ -157,23 +151,19 @@ namespace WebCrawler
 		/// <param name="doc">Dokumen HTML yang sudah di-instansiasi</param>
 		/// <param name="URL">URL tujuan</param>
 		/// <returns>dokumen HTML yang sudah di-load</returns>
-		private static HtmlDocument GetDocument(HtmlDocument doc, Uri URL)
-		{
+		private static HtmlDocument GetDocument(HtmlDocument doc, Uri URL) {
 			HttpWebRequest oReq = (HttpWebRequest)WebRequest.Create(URL);
 			oReq.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5";
 
 			HttpWebResponse resp = (HttpWebResponse)oReq.GetResponse();
 
-			if (resp.ContentType.StartsWith("text/html", StringComparison.InvariantCultureIgnoreCase))
-			{
-				try
-				{
+			if (resp.ContentType.StartsWith("text/html", StringComparison.InvariantCultureIgnoreCase)) {
+				try {
 					var resultStream = resp.GetResponseStream();
 					doc.Load(resultStream);
 				}
-				catch (WebException )
-				{
-					throw ;
+				catch (WebException) {
+					throw;
 				}
 			}
 
@@ -185,13 +175,11 @@ namespace WebCrawler
 		/// </summary>
 		/// <param name="URL">URL dari page</param>
 		/// <returns></returns>
-		private static bool PageHasBeenCrawled(Uri URL)
-		{
+		private static bool PageHasBeenCrawled(Uri URL) {
 			bool retval = false;
 
 			int i = 0;
-			while (i < _pages.Count && !retval)
-			{
+			while (i < _pages.Count && !retval) {
 				retval = (_pages[i].URL == URL);
 				i++;
 			}
@@ -205,10 +193,8 @@ namespace WebCrawler
 		/// <param name="targetList">target List</param>
 		/// <param name="sourceList">source List</param>
 		public static void MergeList(List<string> targetList,
-									  IEnumerable<string> sourceList)
-		{
-			foreach (string str in sourceList)
-			{
+									  IEnumerable<string> sourceList) {
+			foreach (string str in sourceList) {
 				if (!targetList.Contains(str))
 					targetList.Add(str);
 			}
@@ -220,8 +206,7 @@ namespace WebCrawler
 		/// <param name="relativeLink">link yang relatif</param>
 		/// <param name="sourceUri">URI sumber, absolut</param>
 		/// <returns>Link absolut sebagai string</returns>
-		public static string FixLink(string relativeLink, Uri sourceUri)
-		{
+		public static string FixLink(string relativeLink, Uri sourceUri) {
 			Uri retval = new Uri(sourceUri, relativeLink);
 
 			return retval.ToString();
@@ -231,22 +216,17 @@ namespace WebCrawler
 
 		#region Logging and Reporting
 
-		private static void WriteReportToDisk(string contents)
-		{
+		private static void WriteReportToDisk(string contents) {
 			string fileName = ConfigurationManager.AppSettings["logTextFileName"].ToString();
 			FileStream fStream = null;
-			if (File.Exists(fileName))
-			{
+			if (File.Exists(fileName)) {
 				File.Delete(fileName);
 				fStream = File.Create(fileName);
-			}
-			else
-			{
+			} else {
 				fStream = File.OpenWrite(fileName);
 			}
 
-			using (TextWriter writer = new StreamWriter(fStream))
-			{
+			using (TextWriter writer = new StreamWriter(fStream)) {
 				writer.WriteLine(contents);
 				writer.Flush();
 			}
@@ -258,8 +238,7 @@ namespace WebCrawler
 		/// Creates a report out of the data gathered.
 		/// </summary>
 		/// <returns></returns>
-		private static StringBuilder CreateReport()
-		{
+		private static StringBuilder CreateReport() {
 			StringBuilder sb = new StringBuilder();
 
 			sb.Append("<html><head><title>Hubble Search Telescope - Crawl Report</title><style>");
@@ -277,8 +256,7 @@ namespace WebCrawler
 
 			sb.Append("<table><tr><th>Page Size</th><th>Viewstate Size</th><th>Url</th></tr>");
 
-			foreach (Page page in _pages)
-			{
+			foreach (Page page in _pages) {
 				sb.Append("<tr><td>");
 				sb.Append(page.Size.ToString());
 				sb.Append("</td><td>");
@@ -297,25 +275,17 @@ namespace WebCrawler
 			sb.Append("<table><tr><th>Page Size</th><th>Viewstate Size</th><th>Url</th></tr>");
 
 			List<Page> sortedList = new List<Page>();
-			foreach (Page page in _pages)
-			{
-				if (sortedList.Count == 0)
-				{
+			foreach (Page page in _pages) {
+				if (sortedList.Count == 0) {
 					sortedList.Add(page);
-				}
-				else
-				{
-					for (int i = 0; i <= sortedList.Count - 1; i++)
-					{
+				} else {
+					for (int i = 0; i <= sortedList.Count - 1; i++) {
 						Page sortedPage = sortedList[i];
 
-						if (sortedPage.Size > page.Size)
-						{
+						if (sortedPage.Size > page.Size) {
 							sortedList.Insert(i, page);
 							break;
-						}
-						else if (i == sortedList.Count - 1)
-						{
+						} else if (i == sortedList.Count - 1) {
 							sortedList.Add(page);
 							break;
 						}
@@ -323,8 +293,7 @@ namespace WebCrawler
 				}
 			}
 
-			for (int i = sortedList.Count - 1; i >= 0; i--)
-			{
+			for (int i = sortedList.Count - 1; i >= 0; i--) {
 				Page page = sortedList[i];
 
 				sb.Append("<tr><td>");
@@ -343,8 +312,7 @@ namespace WebCrawler
 
 			sb.Append("<table><tr><th>Url</th></tr>");
 
-			foreach (string str in _externalUrls)
-			{
+			foreach (string str in _externalUrls) {
 				sb.Append("<tr><td>");
 				sb.Append(str);
 				sb.Append("</td></tr>");
@@ -357,8 +325,7 @@ namespace WebCrawler
 
 			sb.Append("<table><tr><th>Url</th></tr>");
 
-			foreach (string str in _otherUrls)
-			{
+			foreach (string str in _otherUrls) {
 				sb.Append("<tr><td>");
 				sb.Append(str);
 				sb.Append("</td></tr>");
@@ -371,17 +338,13 @@ namespace WebCrawler
 
 			sb.Append("<table><tr><th>Url</th></tr>");
 
-			if (_failedUrls.Count > 0)
-			{
-				foreach (string str in _failedUrls)
-				{
+			if (_failedUrls.Count > 0) {
+				foreach (string str in _failedUrls) {
 					sb.Append("<tr><td>");
 					sb.Append(str);
 					sb.Append("</td></tr>");
 				}
-			}
-			else
-			{
+			} else {
 				sb.Append("<tr><td>No bad urls.</td></tr>");
 			}
 
@@ -393,17 +356,13 @@ namespace WebCrawler
 
 			sb.Append("<table><tr><th>Exception</th></tr>");
 
-			if (_exceptions.Count > 0)
-			{
-				foreach (string str in _exceptions)
-				{
+			if (_exceptions.Count > 0) {
+				foreach (string str in _exceptions) {
 					sb.Append("<tr><td>");
 					sb.Append(str);
 					sb.Append("</td></tr>");
 				}
-			}
-			else
-			{
+			} else {
 				sb.Append("<tr><td>No exceptions thrown.</td></tr>");
 			}
 
@@ -414,17 +373,13 @@ namespace WebCrawler
 
 			sb.Append("<table><tr><th>Class</th></tr>");
 
-			if (_classes.Count > 0)
-			{
-				foreach (string str in _classes)
-				{
+			if (_classes.Count > 0) {
+				foreach (string str in _classes) {
 					sb.Append("<tr><td>");
 					sb.Append(str);
 					sb.Append("</td></tr>");
 				}
-			}
-			else
-			{
+			} else {
 				sb.Append("<tr><td>No classes found.</td></tr>");
 			}
 
@@ -434,8 +389,7 @@ namespace WebCrawler
 			return sb;
 		}
 
-		private static void OpenReportInIE()
-		{
+		private static void OpenReportInIE() {
 			object o = new object();
 			InternetExplorer ie = new InternetExplorer();
 			IWebBrowserApp wb = (IWebBrowserApp)ie;

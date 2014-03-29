@@ -27,7 +27,8 @@ namespace WebCrawler
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Form1());
+			Form frm = new Form1();
+			Application.Run(frm);
 			//Console output will be redirected to "output" pane of Visual Studio.
 		}
 

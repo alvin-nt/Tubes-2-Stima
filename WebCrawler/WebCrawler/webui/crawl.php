@@ -11,12 +11,11 @@
 	    <p>"Because binoculars for search icons are too mainstream"</p>
 	    <br />
 	    <p>
-		<b>This is a random Page Describing the Crawler, and a link to it</b><br/><br/>
-		BLABLALBalbalsglajgnahvrotur snhvsu ludshnfvgskdhf gsui <br/>
-		sadlvnhas oghnnhg porhnsdvf hgldjfgh skf hglsdfvjnsdf<br/>
-		na slghn ldjfh pgoch fgsdfh ;ld nvdcnvk ldjvnlkjnvlk<br/>
-		langsdfnhgpso dfhpvnsfnh ldjfsh nvdsjnfvldhf<br/>
-		asmjdgisdnhf dshfngnvsd ;vnihvakljhnvlkd jfbvldnj<br/>
+		<b>How we Index the crawl results</b><br/><br/>
+		The crawl results is first screened of punctuation marks and such symbols, then converted to lowercase<br/>
+		Then unique keywords were chosen such that every page will have no duplicate keywords<br/>
+		Next, we look up the MySQL database to see each keyword, whether was it already stored. If not, store it to a new column.<br/>
+		The database used CSV Storage Engine, since other sophisticated search engines have only ~1000 columns limit<br/>
 	    </p>
 	</div>
 	<div class = "linkscontainer">

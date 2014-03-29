@@ -1,1 +1,9 @@
-Test
+-T-H-E-
+Hubble Search Telescope
+
+*could be optimized more*
+
+TODO:
+Multithreading
+Engine Optimizations (long term)
+cari cara penanganan PHP redirect, biar ngga usah nge-parse webpage yang berupa login, signup, etc.
